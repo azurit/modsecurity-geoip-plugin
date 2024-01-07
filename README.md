@@ -12,8 +12,9 @@ via environment variables or HTTP headers.
 ## Prerequisities
 
  * ModSecurity build-id GeoIP support using [SecGeoLookupDb](https://github.com/SpiderLabs/ModSecurity/wiki/Reference-Manual-(v2.x)#user-content-SecGeoLookupDb) directive
- OR
-  * another source of GeoIP data (for example Apache HTTP Server `mod_maxminddb` module)
+
+OR
+ * another source of GeoIP data (for example Apache HTTP Server `mod_maxminddb` module)
 
 ## Plugin installation
 
@@ -43,6 +44,20 @@ Variable which holds GeoIP country code. Default value is suitable for Apache
 HTTP Server `mod_maxminddb` module.
 
 Default: %{env.geoip_country_code}
+
+## Usage
+
+Here is a simple blocking rule based on GeoIP country code:
+
+```
+SecRule TX:GEOIP-PLUGIN_COUNTRY_CODE "@pm RU BY IR" \
+    "id:999,\
+    phase:1,\
+    t:none,\
+    msg:'GeoIP blocking',\
+    logdata:'GeoIP country: %{tx.geoip-plugin_country_code}',\
+    deny"
+```
 
 ## Testing
 
